@@ -346,7 +346,22 @@ header.hidden {
   direction: rtl;
   display: flex;
   list-style: none;
-  gap: 15px;
+  gap: 20px; /* Space between items */
+  align-items: center; /* Ensures everything is centered */
+  padding: 0;
+  margin: 0;
+}
+
+/* Ensure social icons are in the same row */
+.mughader_social_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Increase spacing slightly if needed */
+.mughader_nav_links li {
+  display: flex;
   align-items: center;
 }
 
