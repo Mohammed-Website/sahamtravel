@@ -26,120 +26,52 @@ function closeSidebar() {
 
 
 
-const section = document.querySelector(".wow_effect_section");
+// Canvas Background Animation
+const canvas = document.getElementById("neon_canvas");
+const ctx = canvas.getContext("2d");
 
-function createFloatingElement() {
-    const element = document.createElement("div");
-    element.classList.add("floating_element");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-    // Random position
-    const posX = Math.random() * window.innerWidth;
-    const posY = Math.random() * window.innerHeight;
+const particles = [];
+const particleCount = 100;
 
-    // Random size (more variation)
-    const size = Math.random() * 80 + 30; // Min 30px, Max 110px
-    element.style.width = `${size}px`;
-    element.style.height = `${size}px`;
-
-    // Random animation duration (slower movement)
-    const duration = Math.random() * 6 + 4; // 4s to 10s
-    element.style.animationDuration = `${duration}s`;
-
-    // Random blur for depth effect
-    const blurValue = Math.random() * 3 + 1;
-    element.style.filter = `blur(${blurValue}px)`;
-
-    // Random opacity for some circles to be more visible
-    element.style.opacity = Math.random() * 0.6 + 0.4; // Between 0.4 and 1
-
-    element.style.left = `${posX}px`;
-    element.style.top = `${posY}px`;
-
-    section.appendChild(element);
-
-    // Remove after animation ends
-    setTimeout(() => {
-        element.remove();
-    }, duration * 1000);
+for (let i = 0; i < particleCount; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedX: Math.random() * 1 - 1,
+        speedY: Math.random() * 1 - 1,
+        color: "#00eaff"
+    });
 }
 
-// Generate floating elements continuously
-setInterval(createFloatingElement, 800);
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.x += p.speedX;
+        p.y += p.speedY;
 
+        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-const words = [
-    "رحلات سياحية",
-    "جورجيا",
-    "اذربيجان",
-    "اندونيسيا",
-    "ماليزيا",
-    "تايلاند",
-    "عروض سياحية",
-];
-
-let currentIndex = 1;
-const dynamicWordElement = document.getElementById("mughader_dynamic_word_switch");
-const lineTimerElement = document.getElementById("mughader_line_timer");
-
-// Ensure the initial word is visible
-dynamicWordElement.classList.add("visible");
-
-function updateTimerWidth() {
-    const wordWidth = dynamicWordElement.offsetWidth; // Get the width of the current word
-    const scaledWidth = wordWidth * 1; // Adjust width to 40% of the word's width (smaller)
-    lineTimerElement.style.width = `${scaledWidth}px`; // Set timer line width
-    lineTimerElement.style.margin = "0 auto"; // Center the timer under the text
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    requestAnimationFrame(animateParticles);
 }
 
-function resetTimer() {
-    lineTimerElement.style.transition = "none"; // Disable transition to reset instantly
-    lineTimerElement.style.width = "0"; // Reset width to 0
-    setTimeout(() => {
-        lineTimerElement.style.transition = "width 1.8s linear"; // Reapply transition
-        lineTimerElement.style.width = `${dynamicWordElement.offsetWidth * 1}px`; // Start animation
-    }, 50); // Small delay to ensure transition is reapplied
-}
+animateParticles();
 
-function changeWord() {
-    // Fade out by removing 'visible' class
-    dynamicWordElement.classList.remove("visible");
 
-    setTimeout(() => {
-        // Change word
-        dynamicWordElement.innerText = words[currentIndex];
-        currentIndex = (currentIndex + 1) % words.length;
 
-        // Fade in by adding 'visible' class
-        dynamicWordElement.classList.add("visible");
-
-        // Update timer width
-        updateTimerWidth();
-    }, 300); // Match CSS fade duration
-
-    // Reset and start the timer line animation
-    resetTimer();
-}
-
-// Start the loop
-setInterval(changeWord, 1800); // Match the timer line animation duration
-
-// Adjust the timer width for the initial word
-updateTimerWidth();
-resetTimer(); // Start timer animation for the first word
 
 
 
@@ -513,7 +445,7 @@ function openFullScreenImage(src, text) {
     const whatsappButton = document.createElement('a');
     whatsappButton.className = 'whatsapp_button';
     whatsappButton.innerText = 'إرسال هذا العرض';
-    whatsappButton.href = `https://wa.me/+995598505076?text=طلب%20حجز%20هذا%20العرض:%0A%0Ahttps://mohammed-website.github.io/sahamtravel/${encodeURIComponent(src)}`;
+    whatsappButton.href = `https://wa.me/+966112323080?text=طلب%20حجز%20هذا%20العرض:%0A%0Ahttps://mohammed-website.github.io/wegzztravel/${encodeURIComponent(src)}`;
     fullScreenDiv.appendChild(whatsappButton);
 
     // Close on background click
@@ -525,11 +457,17 @@ function openFullScreenImage(src, text) {
 
     // Smooth close function
     function closeFullScreenImage() {
-        fullScreenDiv.classList.remove('visible'); // Trigger fade-out
-        setTimeout(() => fullScreenDiv.remove(), 300); // Remove element after fade-out
+        const fullScreenDiv = document.querySelector('.full_screen_container');
+        if (!fullScreenDiv) return;
 
 
-        document.body.style.overflow = ''; // Re-enable document scrolling
+        fullScreenDiv.style.opacity = '0';
+
+
+        setTimeout(() => {
+            fullScreenDiv.remove();
+            document.body.style.overflow = '';
+        }, 500);
     }
 }
 
