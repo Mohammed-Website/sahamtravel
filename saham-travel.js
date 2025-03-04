@@ -459,7 +459,7 @@ function openFullScreenImage(src, text) {
     const whatsappButton = document.createElement('a');
     whatsappButton.className = 'whatsapp_button';
     whatsappButton.innerText = 'إرسال هذا العرض';
-    whatsappButton.href = `https://wa.me/+995598505076?text=طلب%20حجز%20هذا%20العرض:%0A%0Ahttps://mohammed-website.github.io/sahamtravel/${encodeURIComponent(src)}`;
+    whatsappButton.href = `https://wa.me/+995598505076?text=مرحبًا%20%F0%9F%91%8B%2C%0A%0Aأنا%20مهتم%20بعرض%20"${encodeURIComponent(text)}"%20وأود%20الحصول%20على%20مزيد%20من%20التفاصيل%20وحجز%20المقاعد.%0A%0A🔗%20رابط%20العرض:%0Ahttps://mohammed-website.github.io/sahamtravel/${encodeURIComponent(src)}%0A%0Aيرجى%20إخباري%20بالتفاصيل%20المتاحة%20وطرق%20الحجز.%20شكرًا%20جزيلًا!%20🙏`;
     fullScreenDiv.appendChild(whatsappButton);
 
     // Close on background click
