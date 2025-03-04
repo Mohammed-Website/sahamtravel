@@ -273,7 +273,21 @@ scrollToWhoAreWe = function (elementIdName) {
             behavior: "smooth"
         });
     }
+}
 
+
+function scrollToMiddleOfElement(className) {
+    const element = document.querySelector(`.${className}`);
+    if (element) {
+        const elementRect = element.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.scrollY;
+        const middlePosition = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
+
+        window.scrollTo({
+            top: middlePosition,
+            behavior: 'smooth'
+        });
+    }
 }
 
 
