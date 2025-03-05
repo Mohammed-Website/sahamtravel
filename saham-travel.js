@@ -98,7 +98,6 @@ function drawCrescentMoon() {
     ctx.globalCompositeOperation = "source-over";
 }
 
-
 // Function to draw glowing stars
 function drawStars() {
     stars.forEach((star) => {
