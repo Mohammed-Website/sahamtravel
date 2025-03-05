@@ -39,9 +39,8 @@ canvas.height = window.innerHeight;
 const stars = [];
 const lanterns = [];
 const starCount = 80;
-const lanternCount = 4; // Set to 4 lanterns
+const lanternCount = 4;
 
-// Function to create glowing stars
 function createStars() {
     for (let i = 0; i < starCount; i++) {
         stars.push({
@@ -54,90 +53,87 @@ function createStars() {
     }
 }
 
-// Function to create 4 evenly spaced lanterns at the bottom
 function createLanterns() {
     for (let i = 0; i < lanternCount; i++) {
         lanterns.push({
-            x: (canvas.width / (lanternCount + 1)) * (i + 1), // Even spacing
-            y: canvas.height * 0.85, // Positioned at bottom quarter
-            swing: Math.random() * 10 + 10, // Swing range
+            baseX: (canvas.width / (lanternCount + 1)) * (i + 1),
+            y: canvas.height * 0.85,
+            swingRange: Math.random() * 5 + 5, // Increase sway range
             angle: Math.random() * Math.PI
         });
     }
 }
 
-let time = 0; // Time variable for animation
+let time = 0;
 
 function drawCrescentMoon() {
     const baseX = canvas.width - 150;
-    const moonY = 100; // Fixed Y position
+    const moonY = 100;
     const outerRadius = 50;
     const innerRadius = 45;
 
-    // Apply a subtle X offset for both the main moon and the clipping circle
-    const wiggleX = Math.sin(time) * 5; // Single wiggle effect
+    // Stronger swaying movement
+    const swayX = Math.sin(time * 0.5) * 5; // Move left-right
+    const rotationAngle = Math.sin(time * 0.5) * 0.1; // Faster rocking effect
 
-    // Draw the outer moon circle with shadow
-    ctx.fillStyle = "#FFD700"; // Golden color
+    ctx.save(); // Save current state
+    ctx.translate(baseX + swayX, moonY); // Move to the moon's center
+    ctx.rotate(rotationAngle); // Apply faster rotation
+
+    ctx.fillStyle = "#FFD700";
     ctx.shadowColor = "#FFD700";
 
     ctx.beginPath();
-    ctx.arc(baseX + wiggleX, moonY, outerRadius, 0, Math.PI * 2);
+    ctx.arc(0, 0, outerRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Remove shadow before clipping
-    ctx.shadowBlur = 0; 
+    ctx.shadowBlur = 0;
     ctx.globalCompositeOperation = "destination-out";
 
-    // Clip with a smaller circle to create the crescent effect
     ctx.beginPath();
-    ctx.arc(baseX + wiggleX + 20, moonY - 10, innerRadius, 0, Math.PI * 2);
+    ctx.arc(20, -10, innerRadius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Restore default blending mode
     ctx.globalCompositeOperation = "source-over";
+    ctx.restore(); // Restore original state
 }
 
-// Function to draw glowing stars
 function drawStars() {
     stars.forEach((star) => {
         ctx.globalAlpha = star.opacity;
-        ctx.fillStyle = "#FFD700"; // Gold color
+        ctx.fillStyle = "#FFD700";
         ctx.shadowBlur = 10;
         ctx.shadowColor = "#FFD700";
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fill();
+
         star.opacity += star.speed * (Math.random() > 0.5 ? 1 : -1);
         if (star.opacity < 0.3) star.opacity = 0.3;
         if (star.opacity > 1) star.opacity = 1;
     });
 }
 
-// Function to draw 4 lanterns at the bottom with smooth swinging
 function drawLanterns() {
-    lanterns.forEach((lantern) => {
-        ctx.globalAlpha = 1; // No flickering
-        ctx.fillStyle = "#FFA500"; // Warm orange glow
+    lanterns.forEach((lantern, index) => {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = "#FFA500";
         ctx.shadowBlur = 15;
         ctx.shadowColor = "#FFA500";
 
-        // Swinging movement
-        let swingX = lantern.x + Math.sin(lantern.angle) * lantern.swing;
+        // Stronger swinging movement
+        let swayX = lantern.baseX + Math.sin(time * 0.6 + index) * lantern.swingRange;
 
         ctx.beginPath();
-        ctx.rect(swingX - 10, lantern.y, 20, 40);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(swingX, lantern.y + 40, 10, 0, Math.PI * 2);
+        ctx.rect(swayX - 10, lantern.y, 20, 40);
         ctx.fill();
 
-        // Update lantern position
-        lantern.angle += 0.02; // Same speed, smooth swing
+        ctx.beginPath();
+        ctx.arc(swayX, lantern.y + 40, 10, 0, Math.PI * 2);
+        ctx.fill();
     });
 }
 
-// Main animation loop
 function animateCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -145,12 +141,11 @@ function animateCanvas() {
     drawStars();
     drawLanterns();
 
-    time += 0.05; // Adjust speed (lower = slower, higher = faster)
+    time += 0.05; // Adjust speed
 
     requestAnimationFrame(animateCanvas);
 }
 
-// Initialize elements and start animation
 createStars();
 createLanterns();
 animateCanvas();
