@@ -66,20 +66,38 @@ function createLanterns() {
     }
 }
 
-// Function to draw a crescent moon at the top
+let time = 0; // Time variable for animation
+
 function drawCrescentMoon() {
-    const moonX = canvas.width - 150;
-    const moonY = 60; // Keep it at the top
-    const radius = 50;
+    const baseX = canvas.width - 150;
+    const moonY = 100; // Fixed Y position
+    const outerRadius = 50;
+    const innerRadius = 45;
+
+    // Apply a subtle X offset for both the main moon and the clipping circle
+    const wiggleX = Math.sin(time) * 5; // Single wiggle effect
+
+    // Draw the outer moon circle with shadow
+    ctx.fillStyle = "#FFD700"; // Golden color
+    ctx.shadowColor = "#FFD700";
 
     ctx.beginPath();
-    ctx.arc(moonX, moonY, radius, Math.PI * 0.2, Math.PI * 1.8, false);
-    ctx.arc(moonX + 20, moonY - 5, radius * 0.8, Math.PI * 1.2, Math.PI * 2.6, true);
-    ctx.fillStyle = "#FFD700"; // Golden moon color
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = "#FFD700";
+    ctx.arc(baseX + wiggleX, moonY, outerRadius, 0, Math.PI * 2);
     ctx.fill();
+
+    // Remove shadow before clipping
+    ctx.shadowBlur = 0; 
+    ctx.globalCompositeOperation = "destination-out";
+
+    // Clip with a smaller circle to create the crescent effect
+    ctx.beginPath();
+    ctx.arc(baseX + wiggleX + 20, moonY - 10, innerRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Restore default blending mode
+    ctx.globalCompositeOperation = "source-over";
 }
+
 
 // Function to draw glowing stars
 function drawStars() {
@@ -127,6 +145,8 @@ function animateCanvas() {
     drawCrescentMoon();
     drawStars();
     drawLanterns();
+
+    time += 0.05; // Adjust speed (lower = slower, higher = faster)
 
     requestAnimationFrame(animateCanvas);
 }
@@ -534,7 +554,6 @@ function openFullScreenImage(src, text) {
     whatsappButton.className = 'whatsapp_button';
     whatsappButton.innerText = 'إرسال هذا العرض';
     whatsappButton.href = `https://wa.me/+995598505076?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(text)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0Ahttps://mohammed-website.github.io/sahamtravel/${encodeURIComponent(src)}%0A%0Aبإنتظار%20ردكم%20وشكرًا%20لكم`;
-
 
     fullScreenDiv.appendChild(whatsappButton);
 
