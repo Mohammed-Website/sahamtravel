@@ -26,49 +26,115 @@ function closeSidebar() {
 
 
 
-// Canvas Background Animation
 const canvas = document.getElementById("neon_canvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const particles = [];
-const particleCount = 100;
+const stars = [];
+const lanterns = [];
+const starCount = 80;
+const lanternCount = 4; // Set to 4 lanterns
 
-for (let i = 0; i < particleCount; i++) {
-    particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 3 + 1,
-        speedX: Math.random() * 1 - 1,
-        speedY: Math.random() * 1 - 1,
-        color: "#00eaff"
+// Function to create glowing stars
+function createStars() {
+    for (let i = 0; i < starCount; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.5,
+            speed: Math.random() * 0.2 + 0.1
+        });
+    }
+}
+
+// Function to create 4 evenly spaced lanterns at the bottom
+function createLanterns() {
+    for (let i = 0; i < lanternCount; i++) {
+        lanterns.push({
+            x: (canvas.width / (lanternCount + 1)) * (i + 1), // Even spacing
+            y: canvas.height * 0.85, // Positioned at bottom quarter
+            swing: Math.random() * 10 + 10, // Swing range
+            angle: Math.random() * Math.PI
+        });
+    }
+}
+
+// Function to draw a crescent moon at the top
+function drawCrescentMoon() {
+    const moonX = canvas.width - 150;
+    const moonY = 60; // Keep it at the top
+    const radius = 50;
+
+    ctx.beginPath();
+    ctx.arc(moonX, moonY, radius, Math.PI * 0.2, Math.PI * 1.8, false);
+    ctx.arc(moonX + 20, moonY - 5, radius * 0.8, Math.PI * 1.2, Math.PI * 2.6, true);
+    ctx.fillStyle = "#FFD700"; // Golden moon color
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "#FFD700";
+    ctx.fill();
+}
+
+// Function to draw glowing stars
+function drawStars() {
+    stars.forEach((star) => {
+        ctx.globalAlpha = star.opacity;
+        ctx.fillStyle = "#FFD700"; // Gold color
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "#FFD700";
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+        star.opacity += star.speed * (Math.random() > 0.5 ? 1 : -1);
+        if (star.opacity < 0.3) star.opacity = 0.3;
+        if (star.opacity > 1) star.opacity = 1;
     });
 }
 
-function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+// Function to draw 4 lanterns at the bottom with smooth swinging
+function drawLanterns() {
+    lanterns.forEach((lantern) => {
+        ctx.globalAlpha = 1; // No flickering
+        ctx.fillStyle = "#FFA500"; // Warm orange glow
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#FFA500";
 
-    for (let i = 0; i < particles.length; i++) {
-        let p = particles[i];
-        p.x += p.speedX;
-        p.y += p.speedY;
+        // Swinging movement
+        let swingX = lantern.x + Math.sin(lantern.angle) * lantern.swing;
 
-        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
-
-        ctx.fillStyle = p.color;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = p.color;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.rect(swingX - 10, lantern.y, 20, 40);
         ctx.fill();
-    }
-    requestAnimationFrame(animateParticles);
+        ctx.beginPath();
+        ctx.arc(swingX, lantern.y + 40, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Update lantern position
+        lantern.angle += 0.02; // Same speed, smooth swing
+    });
 }
 
-animateParticles();
+// Main animation loop
+function animateCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawCrescentMoon();
+    drawStars();
+    drawLanterns();
+
+    requestAnimationFrame(animateCanvas);
+}
+
+// Initialize elements and start animation
+createStars();
+createLanterns();
+animateCanvas();
+
+
+
+
 
 
 
