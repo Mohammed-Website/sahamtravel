@@ -26,6 +26,10 @@ function closeSidebar() {
 
 
 
+
+
+
+/* First Section Background Design */
 const canvas = document.getElementById("neon_canvas");
 const ctx = canvas.getContext("2d");
 
@@ -529,7 +533,7 @@ function openFullScreenImage(src, text) {
     const whatsappButton = document.createElement('a');
     whatsappButton.className = 'whatsapp_button';
     whatsappButton.innerText = 'إرسال هذا العرض';
-    whatsappButton.href = `https://wa.me/+995598505076?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%0Aحاب%20أسأل%20عن%20عرض%20*${encodeURIComponent(text)}*%20وحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0Ahttps://mohammed-website.github.io/sahamtravel/${encodeURIComponent(src)}%0A%0Aشكرًا%20جزيلًا%20🙏%20بانتظار%20ردكم%20✨`;
+    whatsappButton.href = `https://wa.me/+995598505076?text=💎%20طلب%20حجز%20عرض%20جديد%20💎%0A%0Aسلام%20عليكم،%20حاب%20أسأل%20عن%20عرض%0A*${encodeURIComponent(text)}*%0Aوحاب%20أعرف%20تفاصيل%20أكثر%20عن%20عروضكم%20المشابهة.%0A%0A🔗%20رابط%20صورة%20العرض:%0Ahttps://mohammed-website.github.io/sahamtravel/${encodeURIComponent(src)}%0A%0Aشكرًا%20جزيلًا%20🙏%20بانتظار%20ردكم%20✨`;
 
     fullScreenDiv.appendChild(whatsappButton);
 
